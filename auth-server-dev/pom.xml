@@ -5,7 +5,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>com.thomasclarisse.sso</groupId>
+		<groupId>io.github.tomacla.sso</groupId>
 		<artifactId>parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>

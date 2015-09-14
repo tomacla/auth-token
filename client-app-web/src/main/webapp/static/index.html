@@ -1,0 +1,28 @@
+<html>
+
+<head>
+<title>SSO Sample App</title>
+
+	<script type="text/javascript" src="static/js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="static/js/js.cookie-2.0.3.min.js"></script>
+	<script type="text/javascript" src="static/js/common.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+ 			var token = Cookies.get('X-Token');
+ 			console.log('Authentication token is ' + token);
+		});
+	</script>
+
+</head>
+
+<body>
+
+	<p>
+		Hi. This is the index app and it is protected. Click here to <a
+			href="protected.html">access</a> another protected resource.
+	</p>
+
+</body>
+
+</html>

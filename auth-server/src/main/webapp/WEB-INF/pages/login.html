@@ -1,0 +1,22 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login form</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+
+	<p th:text="${message}"></p>
+	<form id="login-form" method="post" th:action="@{/login}" th:object="${credentials}">
+	
+		<input type="text" name="login" id="login" placeholder="login" th:field="*{login}" />
+		<input type="password" name="password" id="password" placeholder="password" th:field="*{password}" />
+		<input type="hidden" name="redirect_url" id="redirect_url" th:field="*{redirectTo}" />
+		<input type="submit" value="Connexion" />
+	
+	</form>
+	
+</body>
+
+</html>
