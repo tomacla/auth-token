@@ -1,4 +1,4 @@
-package io.github.tomacla.client.app.json;
+package io.github.tomacla.client.app.api.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,15 +11,15 @@ import javax.ws.rs.ext.Provider;
 public class ObjectMapperProvider extends JacksonJaxbJsonProvider {
 
     public ObjectMapperProvider() {
-        super();
+	super();
 
-        SimpleModule module = new SimpleModule();
+	SimpleModule module = new SimpleModule();
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(Include.NON_NULL);
-        mapper.registerModule(module);
+	ObjectMapper mapper = new ObjectMapper();
+	mapper.setSerializationInclusion(Include.NON_NULL);
+	mapper.registerModule(module);
 
-        this.setMapper(mapper);
+	this.setMapper(mapper);
 
     }
 
