@@ -98,5 +98,30 @@ public class AuthenticationApiTest extends JerseyTest {
 
 	response.close();
     }
+    
+    @Test
+    public void getToken() {
+
+	Mockito.when(authServiceMock.getTokenFromAuthCode("bar")).thenReturn(Optional.of("foo"));
+
+	final Response response = target("/auth-code").request().post(Entity.json("bar"));
+
+	Assert.assertEquals(Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+	Assert.assertEquals("foo", response.readEntity(String.class));
+
+	response.close();
+    }
+    
+    @Test
+    public void getTokenUnknown() {
+
+	Mockito.when(authServiceMock.getTokenFromAuthCode("bar")).thenReturn(Optional.empty());
+
+	final Response response = target("/auth-code").request().post(Entity.json("bar"));
+
+	Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatusInfo().getStatusCode());
+
+	response.close();
+    }
 
 }

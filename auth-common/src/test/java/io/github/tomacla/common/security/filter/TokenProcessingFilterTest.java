@@ -25,7 +25,7 @@ public class TokenProcessingFilterTest {
 
     @Before
     public void before() {
-	filter = new TokenProcessingFilter();
+	filter = new TokenProcessingFilter(true, true);
 	request = Mockito.mock(HttpServletRequest.class);
 	response = Mockito.mock(HttpServletResponse.class);
 	chain = Mockito.mock(FilterChain.class);
@@ -38,6 +38,15 @@ public class TokenProcessingFilterTest {
 	Mockito.verify(chain).doFilter(request, response);
 	Assert.assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
+    
+    @Test
+    public void doFilterExistingAuthentication() throws IOException, ServletException {
+	SecurityContextHolder.getContext().setAuthentication(new TokenAuthentication("foo"));
+	filter.doFilter(request, response, chain);
+	Mockito.verify(request, Mockito.never()).getHeader(Mockito.anyString());
+	Mockito.verify(chain).doFilter(request, response);
+	Assert.assertNotNull(SecurityContextHolder.getContext().getAuthentication());
+    }
 
     @Test
     public void doFilterWithTokenAsHeader() throws IOException, ServletException {
@@ -47,16 +56,16 @@ public class TokenProcessingFilterTest {
 	TokenAuthentication auth = (TokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
 	Assert.assertEquals("token", auth.getToken());
     }
-
+    
     @Test
-    public void doFilterWithTokenAsParam() throws IOException, ServletException {
-	Mockito.when(request.getParameter("X-Token")).thenReturn("token");
+    public void doFilterWithTokenAsHeaderButNotSupported() throws IOException, ServletException {
+	filter = new TokenProcessingFilter(false, true);
+	Mockito.when(request.getHeader("X-Token")).thenReturn("token");
 	filter.doFilter(request, response, chain);
 	Mockito.verify(chain).doFilter(request, response);
-	TokenAuthentication auth = (TokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
-	Assert.assertEquals("token", auth.getToken());
+	Assert.assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
-    
+
     @Test
     public void doFilterWithTokenAsCookie() throws IOException, ServletException {
 	Cookie cookie = new Cookie("X-Token", "token");
@@ -66,6 +75,17 @@ public class TokenProcessingFilterTest {
 	Mockito.verify(chain).doFilter(request, response);
 	TokenAuthentication auth = (TokenAuthentication) SecurityContextHolder.getContext().getAuthentication();
 	Assert.assertEquals("token", auth.getToken());
+    }
+    
+    @Test
+    public void doFilterWithTokenAsCookieButNotSupported() throws IOException, ServletException {
+	filter = new TokenProcessingFilter(true, false);
+	Cookie cookie = new Cookie("X-Token", "token");
+	Cookie[] cookies = new Cookie[]{cookie};
+	Mockito.when(request.getCookies()).thenReturn(cookies);
+	filter.doFilter(request, response, chain);
+	Mockito.verify(chain).doFilter(request, response);
+	Assert.assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
     
     @Test

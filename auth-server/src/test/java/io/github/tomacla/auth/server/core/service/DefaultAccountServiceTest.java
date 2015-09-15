@@ -50,5 +50,21 @@ public class DefaultAccountServiceTest {
 	result = this.service.verifyToken(token.get());
 	Assert.assertFalse(result.isPresent());
     }
+    
+    @Test
+    public void authCodes() {
+	String authCode = this.service.getAuthCodeForToken("foo");
+	Assert.assertNotNull(authCode);
+	Optional<String> token = this.service.getTokenFromAuthCode(authCode);
+	Assert.assertTrue(token.isPresent());
+	Assert.assertEquals("foo", token.get());
+    }
+    
+    @Test
+    public void authCodesUnknown() {
+	Optional<String> token = this.service.getTokenFromAuthCode("foo");
+	Assert.assertFalse(token.isPresent());
+    }
+    
 
 }

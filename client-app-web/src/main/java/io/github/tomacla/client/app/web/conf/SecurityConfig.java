@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 import io.github.tomacla.common.security.entrypoint.RedirectEntryPoint;
+import io.github.tomacla.common.security.filter.AuthCodeProcessingFilter;
+import io.github.tomacla.common.security.filter.FilterPosition;
 import io.github.tomacla.common.security.filter.TokenCookieWriterFilter;
 import io.github.tomacla.common.security.filter.TokenProcessingFilter;
 import io.github.tomacla.common.security.provider.TokenAuthenticationProvider;
@@ -28,15 +30,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 	http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		.addFilterAfter(tokenProcessingFilter(), TokenProcessingFilter.AFTER_POSITION)
-		.addFilterAfter(tokenCookieWriterFilter(), TokenCookieWriterFilter.AFTER_POSITION) //
+		.addFilterAfter(authCodeProcessingFilter(), FilterPosition.PRE_AUTH)
+		.addFilterAfter(tokenProcessingFilter(), FilterPosition.PRE_AUTH)
+		.addFilterAfter(tokenCookieWriterFilter(), FilterPosition.LAST) //
 		.exceptionHandling().authenticationEntryPoint(redirectEntryPoint()).and()
 		.authorizeRequests().antMatchers("/**").authenticated();
     }
 
     @Bean
     public TokenAuthenticationProvider authenticationProvider() {
-	return new TokenAuthenticationProvider(authenticationService());
+	return new TokenAuthenticationProvider(tokenService());
     }
 
     @Bean
@@ -45,13 +48,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     @Bean
-    public TokenService authenticationService() {
+    public TokenService tokenService() {
 	return new DefaultTokenService();
     }
 
     @Bean
     public TokenProcessingFilter tokenProcessingFilter() {
-	return new TokenProcessingFilter();
+	return new TokenProcessingFilter(true, true);
+    }
+    
+    @Bean
+    public AuthCodeProcessingFilter authCodeProcessingFilter() {
+	return new AuthCodeProcessingFilter(tokenService());
     }
 
     @Bean

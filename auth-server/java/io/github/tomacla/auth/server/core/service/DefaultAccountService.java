@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.inject.Named;
 
@@ -18,10 +19,12 @@ public class DefaultAccountService {
     
     private Map<String, String> accounts;
     private Map<String, String> tokens;
+    private Map<String, String> authCodes;
     private SecureRandom random;
 
     public DefaultAccountService() {
 	this.tokens = new HashMap<>();
+	this.authCodes = new HashMap<>();
 	this.accounts = new HashMap<>();
 	this.random = new SecureRandom();
 	this.initAccounts();
@@ -37,6 +40,19 @@ public class DefaultAccountService {
 	    String token = this.generateToken(login);
 	    this.tokens.put(token, login);
 	    return Optional.of(token);
+	}
+	return Optional.empty();
+    }
+    
+    public String getAuthCodeForToken(String token) {
+	String authCode = UUID.randomUUID().toString();
+	this.authCodes.put(authCode, token);
+	return authCode;
+    }
+    
+    public Optional<String> getTokenFromAuthCode(String authCode) {
+	if(this.authCodes.containsKey(authCode)) {
+	    return Optional.of(this.authCodes.get(authCode));
 	}
 	return Optional.empty();
     }

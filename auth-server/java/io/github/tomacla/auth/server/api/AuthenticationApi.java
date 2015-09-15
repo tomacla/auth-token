@@ -53,5 +53,17 @@ public class AuthenticationApi {
 	}
 	return Response.status(Status.BAD_REQUEST).build();
     }
+    
+    @POST
+    @Path("/auth-code")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.TEXT_PLAIN_VALUE)
+    public Response getTokenFromAuthCode(String authCode) {
+	Optional<String> tokenFromAuthCode = this.authService.getTokenFromAuthCode(authCode);
+	if(tokenFromAuthCode.isPresent()) {
+	    return Response.ok(tokenFromAuthCode.get()).build();
+	}
+	return Response.status(Status.BAD_REQUEST).build();
+    }
 
 }

@@ -34,9 +34,31 @@ public class TokenCookieWriterFilterTest {
     
     @Test
     public void writeHeaders() throws IOException, ServletException {
+	Mockito.when(request.getCookies()).thenReturn(new Cookie[] {});
 	TokenAuthentication auth = new TokenAuthentication("token");
 	SecurityContextHolder.getContext().setAuthentication(auth);
-	Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("http://www.domain.com/page"));
+	writer.doFilter(request, response, chain);
+	Mockito.verify(response).addCookie(Mockito.any(Cookie.class));
+	Mockito.verify(chain).doFilter(request, response);
+    }
+    
+    @Test
+    public void writeHeadersAlreadyExists() throws IOException, ServletException {
+	Cookie existing = new Cookie("X-Token", "token");
+	Mockito.when(request.getCookies()).thenReturn(new Cookie[] {existing});
+	TokenAuthentication auth = new TokenAuthentication("token");
+	SecurityContextHolder.getContext().setAuthentication(auth);
+	writer.doFilter(request, response, chain);
+	Mockito.verify(response, Mockito.never()).addCookie(Mockito.any(Cookie.class));
+	Mockito.verify(chain).doFilter(request, response);
+    }
+    
+    @Test
+    public void writeHeadersAlreadyExistsButDifferent() throws IOException, ServletException {
+	Cookie existing = new Cookie("X-Token", "token_old");
+	Mockito.when(request.getCookies()).thenReturn(new Cookie[] {existing});
+	TokenAuthentication auth = new TokenAuthentication("token");
+	SecurityContextHolder.getContext().setAuthentication(auth);
 	writer.doFilter(request, response, chain);
 	Mockito.verify(response).addCookie(Mockito.any(Cookie.class));
 	Mockito.verify(chain).doFilter(request, response);
@@ -44,12 +66,31 @@ public class TokenCookieWriterFilterTest {
     
     @Test
     public void writeHeadersOtherAuthentication() throws IOException, ServletException {
+	Mockito.when(request.getCookies()).thenReturn(new Cookie[] {});
 	UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("test", "test");
 	SecurityContextHolder.getContext().setAuthentication(auth);
 	writer.doFilter(request, response, chain);
 	Mockito.verify(response, Mockito.never()).addCookie(Mockito.any(Cookie.class));
 	Mockito.verify(chain).doFilter(request, response);
     }
+    
+    @Test
+    public void writeHeadersNullAuthentication() throws IOException, ServletException {
+	Mockito.when(request.getCookies()).thenReturn(new Cookie[] {});
+	writer.doFilter(request, response, chain);
+	Mockito.verify(response, Mockito.never()).addCookie(Mockito.any(Cookie.class));
+	Mockito.verify(chain).doFilter(request, response);
+    }
+    
+    @Test
+    public void writeHeadersNullAuthenticationButCookieExists() throws IOException, ServletException {
+	Cookie existing = new Cookie("X-Token", "token_old");
+	Mockito.when(request.getCookies()).thenReturn(new Cookie[] {existing});
+	writer.doFilter(request, response, chain);
+	Mockito.verify(response).addCookie(Mockito.any(Cookie.class));
+	Mockito.verify(chain).doFilter(request, response);
+    }
+    
     
     
 }

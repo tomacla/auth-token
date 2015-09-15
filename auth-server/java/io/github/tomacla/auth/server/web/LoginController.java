@@ -45,9 +45,10 @@ public class LoginController {
 		model.addAttribute("token", token.get());
 		return "success";
 	    }
+	    String authCode = authService.getAuthCodeForToken(token.get());
 	    // TODO redirection is wrong here, should check if url already have
 	    // query params or not
-	    return "redirect:" + credentials.redirectTo + "?X-Token=" + token.get();
+	    return "redirect:" + credentials.redirectTo + "?auth_code=" + authCode;
 	}
 	model.addAttribute("message", "Login failed : check your credentials");
 	model.addAttribute("credentials", credentials);
