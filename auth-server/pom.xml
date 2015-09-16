@@ -97,22 +97,4 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.3.2.v20150730</version>
-				<configuration>
-					<stopKey>auth-server</stopKey>
-					<stopPort>9966</stopPort>
-					<scanIntervalSeconds>10</scanIntervalSeconds>
-					<webApp>
-						<contextPath>/auth-server</contextPath>
-					</webApp>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 </project>

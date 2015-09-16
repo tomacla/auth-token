@@ -13,7 +13,6 @@
 
 	<modules>
 		<module>auth-server</module>
-		<module>auth-server-dev</module>
 		<module>client-app</module>
 		<module>client-app-web</module>
 		<module>auth-common</module>
