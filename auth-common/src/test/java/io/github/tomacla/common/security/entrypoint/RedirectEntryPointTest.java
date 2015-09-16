@@ -22,7 +22,7 @@ public class RedirectEntryPointTest {
 
     @Before
     public void before() {
-	entryPoint = new RedirectEntryPoint();
+	entryPoint = new RedirectEntryPoint("http://targetpath/%s");
 	request = Mockito.mock(HttpServletRequest.class);
 	response = Mockito.mock(HttpServletResponse.class);
 	exception = Mockito.mock(AuthenticationException.class);
@@ -32,7 +32,7 @@ public class RedirectEntryPointTest {
     public void commence() throws IOException, ServletException {
 	Mockito.when(request.getRequestURL()).thenReturn(new StringBuffer("/url"));
 	entryPoint.commence(request, response, exception);
-	Mockito.verify(response).sendRedirect("http://localhost:8080/auth-server/login?redirect_to=%2Furl");
+	Mockito.verify(response).sendRedirect("http://targetpath/%2Furl");
     }
 
     @Test
@@ -41,7 +41,7 @@ public class RedirectEntryPointTest {
 	Mockito.when(request.getQueryString()).thenReturn("foo=bar&hello=world");
 	entryPoint.commence(request, response, exception);
 	Mockito.verify(response)
-		.sendRedirect("http://localhost:8080/auth-server/login?redirect_to=%2Furl%3Ffoo%3Dbar%26hello%3Dworld");
+		.sendRedirect("http://targetpath/%2Furl%3Ffoo%3Dbar%26hello%3Dworld");
     }
 
 }

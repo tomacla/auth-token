@@ -21,16 +21,17 @@ public class TokenProcessingFilter extends GenericFilterBean {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(TokenProcessingFilter.class);
 
-    private Boolean supportHttpHeader;
-    private Boolean supportCookie;
+    private TokenProcessing config;
 
     public TokenProcessingFilter() {
-	this(true, false);
+	this(TokenProcessing.HTTP_PARAM);
     }
 
-    public TokenProcessingFilter(Boolean supportHttpHeader, Boolean supportCookie) {
-	this.supportHttpHeader = supportHttpHeader;
-	this.supportCookie = supportCookie;
+    public TokenProcessingFilter(TokenProcessing processingConfig) {
+	this.config = processingConfig;
+	if (config == null) {
+	    config = TokenProcessing.HTTP_PARAM;
+	}
     }
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -41,13 +42,13 @@ public class TokenProcessingFilter extends GenericFilterBean {
 	if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
 	    String strToken = null;
-	    
-	    if(supportHttpHeader) {
+
+	    if (config.supportHttpParam()) {
 		LOGGER.debug("Search token in HTTP Headers");
 		strToken = request.getHeader(Headers.X_TOKEN);
 	    }
-	    
-	    if (supportCookie && strToken == null) {
+
+	    if (config.supportCookie() && strToken == null) {
 		LOGGER.debug("Search token in Cookies");
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {

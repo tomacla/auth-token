@@ -1,5 +1,7 @@
 package io.github.tomacla.auth.server.web;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -25,7 +27,7 @@ public class LoginController {
     public String showLoginForm(@RequestParam(name = "redirect_to", required = false) String redirectTo, Model model) {
 	LOGGER.debug("Display login form");
 	if (redirectTo == null || redirectTo.trim().isEmpty()) {
-	    redirectTo = "nowhere";
+	    redirectTo = "";
 	}
 
 	CredentialsWrapper credentials = new CredentialsWrapper();
@@ -41,14 +43,30 @@ public class LoginController {
 	LOGGER.debug("Handle post request from login form");
 	Optional<String> token = authService.authenticate(credentials.login, credentials.password);
 	if (token.isPresent()) {
-	    if (credentials.redirectTo.equals("nowhere")) {
+	    
+	    if (credentials.redirectTo == null || credentials.redirectTo.trim().isEmpty()) {
 		model.addAttribute("token", token.get());
 		return "success";
 	    }
+	    
+	    if(!isValidUrl(credentials.redirectTo)) {
+		credentials.redirectTo = "";
+		model.addAttribute("message", "Login failed : wrong redirection URL");
+		model.addAttribute("credentials", credentials);
+		return "login";
+	    }
+	    
 	    String authCode = authService.getAuthCodeForToken(token.get());
-	    // TODO redirection is wrong here, should check if url already have
-	    // query params or not
-	    return "redirect:" + credentials.redirectTo + "?auth_code=" + authCode;
+	    
+	    String redirectUrl = credentials.redirectTo;
+	    if(redirectUrl.contains("?")) {
+		redirectUrl += "&auth_code=" + authCode;
+	    }
+	    else {
+		redirectUrl += "?auth_code=" + authCode;
+	    }
+	    
+	    return "redirect:" + redirectUrl;
 	}
 	model.addAttribute("message", "Login failed : check your credentials");
 	model.addAttribute("credentials", credentials);
@@ -93,4 +111,13 @@ public class LoginController {
 
     }
 
+    private Boolean isValidUrl(String urlToBeTested) {
+	try {
+	    new URL(urlToBeTested);
+	    return true;
+	} catch (MalformedURLException e) {
+	    return false;
+	}
+    }
+    
 }

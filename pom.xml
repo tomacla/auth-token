@@ -32,6 +32,7 @@
 		<servlet.version>2.5</servlet.version>
 		<thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
 		<commons.logging.version>1.2</commons.logging.version>
+		<jose4j.version>0.4.4</jose4j.version>
 	</properties>
 
 	<dependencyManagement>
@@ -42,7 +43,7 @@
 				<artifactId>auth-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
@@ -114,6 +115,12 @@
 				<artifactId>jackson-core</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -155,6 +162,12 @@
 				<groupId>org.thymeleaf</groupId>
 				<artifactId>thymeleaf-spring4</artifactId>
 				<version>${thymeleaf.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.bitbucket.b_c</groupId>
+				<artifactId>jose4j</artifactId>
+				<version>${jose4j.version}</version>
 			</dependency>
 
 		</dependencies>

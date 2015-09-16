@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.github.tomacla.auth.server.api.dto.AuthRequestDTO;
 import io.github.tomacla.auth.server.api.json.ObjectMapperProvider;
-import io.github.tomacla.auth.server.core.service.DefaultAccountService;
+import io.github.tomacla.auth.server.core.service.AccountService;
 
 public class AuthenticationApiTest extends JerseyTest {
 
@@ -26,8 +26,8 @@ public class AuthenticationApiTest extends JerseyTest {
     public static class ApiTestConfiguration {
 
 	@Bean
-	public DefaultAccountService authenticationService() {
-	    return Mockito.mock(DefaultAccountService.class);
+	public AccountService authenticationService() {
+	    return Mockito.mock(AccountService.class);
 	}
 
     }
@@ -36,7 +36,7 @@ public class AuthenticationApiTest extends JerseyTest {
     protected Application configure() {
 
 	AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ApiTestConfiguration.class);
-	authServiceMock = ctx.getBean(DefaultAccountService.class);
+	authServiceMock = ctx.getBean(AccountService.class);
 
 	ResourceConfig rc = new ResourceConfig();
 	rc.property("contextConfig", ctx);
@@ -46,7 +46,7 @@ public class AuthenticationApiTest extends JerseyTest {
 
     }
 
-    private DefaultAccountService authServiceMock;
+    private AccountService authServiceMock;
 
     @Test
     public void authenticateByCredentials() {
@@ -78,7 +78,7 @@ public class AuthenticationApiTest extends JerseyTest {
     @Test
     public void authenticateByToken() {
 
-	Mockito.when(authServiceMock.verifyToken("fake_token")).thenReturn(Optional.of("foo"));
+	Mockito.when(authServiceMock.verifyToken("fake_token")).thenReturn(true);
 
 	final Response response = target("/fake_token").request().get();
 
@@ -90,7 +90,7 @@ public class AuthenticationApiTest extends JerseyTest {
     @Test
     public void authenticateByToken_fail() {
 
-	Mockito.when(authServiceMock.verifyToken("fake_token")).thenReturn(Optional.empty());
+	Mockito.when(authServiceMock.verifyToken("fake_token")).thenReturn(false);
 
 	final Response response = target("/fake_token").request().get();
 

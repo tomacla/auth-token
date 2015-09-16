@@ -16,6 +16,13 @@ public class RedirectEntryPoint implements AuthenticationEntryPoint {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(RedirectEntryPoint.class);
     
+    private String redirectUrlToFormat;
+    
+    public RedirectEntryPoint(String redirectUrlToFormat) {
+	this.redirectUrlToFormat = redirectUrlToFormat;
+    }
+    
+    
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
 	    AuthenticationException authException) throws IOException, ServletException {
@@ -30,8 +37,7 @@ public class RedirectEntryPoint implements AuthenticationEntryPoint {
 	    full = requestURL.append('?').append(queryString).toString();
 	}
 
-	// TODO put that in a variable
-	String redirectUrl = "http://localhost:8080/auth-server/login?redirect_to=" + URLEncoder.encode(full, "UTF-8");
+	String redirectUrl = String.format(redirectUrlToFormat, URLEncoder.encode(full, "UTF-8"));
 	
 	LOGGER.debug("Redirect to {}", redirectUrl);
 	

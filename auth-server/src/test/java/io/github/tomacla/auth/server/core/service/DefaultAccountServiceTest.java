@@ -3,18 +3,17 @@ package io.github.tomacla.auth.server.core.service;
 import java.util.Optional;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
 
-import io.github.tomacla.auth.server.core.service.DefaultAccountService;
-
-@RunWith(MockitoJUnitRunner.class)
 public class DefaultAccountServiceTest {
 
-    @InjectMocks
     private DefaultAccountService service;
+    
+    @Before
+    public void before() {
+	this.service = new DefaultAccountService(5, "thisisalongsecrettobecompatiblewithrsa256");
+    }
 
     @Test
     public void authenticate() {
@@ -43,12 +42,8 @@ public class DefaultAccountServiceTest {
     @Test
     public void verifyToken() {
 	Optional<String> token = this.service.authenticate("tomacla", "tomaclapwd");
-	Optional<String> result = this.service.verifyToken(token.get());
-	Assert.assertTrue(result.isPresent());
-	Assert.assertEquals("tomacla", result.get());
-	this.service.invalidateToken(token.get());
-	result = this.service.verifyToken(token.get());
-	Assert.assertFalse(result.isPresent());
+	Boolean result = this.service.verifyToken(token.get());
+	Assert.assertTrue(result);
     }
     
     @Test

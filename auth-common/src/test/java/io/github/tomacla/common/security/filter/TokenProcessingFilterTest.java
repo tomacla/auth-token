@@ -25,7 +25,7 @@ public class TokenProcessingFilterTest {
 
     @Before
     public void before() {
-	filter = new TokenProcessingFilter(true, true);
+	filter = new TokenProcessingFilter(TokenProcessing.BOTH);
 	request = Mockito.mock(HttpServletRequest.class);
 	response = Mockito.mock(HttpServletResponse.class);
 	chain = Mockito.mock(FilterChain.class);
@@ -59,7 +59,7 @@ public class TokenProcessingFilterTest {
     
     @Test
     public void doFilterWithTokenAsHeaderButNotSupported() throws IOException, ServletException {
-	filter = new TokenProcessingFilter(false, true);
+	filter = new TokenProcessingFilter(TokenProcessing.COOKIE);
 	Mockito.when(request.getHeader("X-Token")).thenReturn("token");
 	filter.doFilter(request, response, chain);
 	Mockito.verify(chain).doFilter(request, response);
@@ -79,7 +79,7 @@ public class TokenProcessingFilterTest {
     
     @Test
     public void doFilterWithTokenAsCookieButNotSupported() throws IOException, ServletException {
-	filter = new TokenProcessingFilter(true, false);
+	filter = new TokenProcessingFilter(TokenProcessing.HTTP_PARAM);
 	Cookie cookie = new Cookie("X-Token", "token");
 	Cookie[] cookies = new Cookie[]{cookie};
 	Mockito.when(request.getCookies()).thenReturn(cookies);

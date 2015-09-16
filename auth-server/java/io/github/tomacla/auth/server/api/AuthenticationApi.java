@@ -17,17 +17,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
 import io.github.tomacla.auth.server.api.dto.AuthRequestDTO;
-import io.github.tomacla.auth.server.core.service.DefaultAccountService;
+import io.github.tomacla.auth.server.core.service.AccountService;
 
 @Path("/")
 public class AuthenticationApi {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationApi.class);
     
-    private DefaultAccountService authService;
+    private AccountService authService;
 
     @Inject
-    public AuthenticationApi(DefaultAccountService authService) {
+    public AuthenticationApi(AccountService authService) {
 	this.authService = authService;
     }
 
@@ -47,8 +47,8 @@ public class AuthenticationApi {
     @Path("/{token}")
     public Response verifyToken(@PathParam("token") String token) {
 	LOGGER.debug("Trying to verify {}", token);
-	Optional<String> verified = authService.verifyToken(token);
-	if (verified.isPresent()) {
+	Boolean verified = authService.verifyToken(token);
+	if (verified) {
 	    return Response.ok().build();
 	}
 	return Response.status(Status.BAD_REQUEST).build();
