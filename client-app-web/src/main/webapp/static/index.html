@@ -7,10 +7,42 @@
 	<script type="text/javascript" src="static/js/js.cookie-2.0.3.min.js"></script>
 	<script type="text/javascript" src="static/js/common.js"></script>
 	
+	<!-- TODO add properties for URL -->
 	<script type="text/javascript">
 		$(function() {
+			
  			var token = Cookies.get('X-Token');
  			console.log('Authentication token is ' + token);
+ 			
+ 			$('#withoutHeaderButton').click(function() {
+ 				$.ajax({
+			         url: 'http://localhost:8080/client-app/hello',
+			         type: 'GET',
+			         success: function() {
+			        	 alert('Success callback');
+			         },
+			         error : function() {
+			        	 alert('Error callback');
+			         }
+			      });
+ 			});
+ 			
+			$('#withHeaderButton').click(function() {
+				$.ajax({
+			         url: 'http://localhost:8080/client-app/hello',
+			         type: 'GET',
+			         beforeSend: function(xhr){
+			        	 xhr.setRequestHeader('X-Token', token);
+			         },
+			         success: function() {
+			        	 alert('Success callback');
+			         },
+			         error : function() {
+			        	 alert('Error callback');
+			         }
+			      });
+ 			});
+ 			
 		});
 	</script>
 
@@ -21,6 +53,12 @@
 	<p>
 		Hi. This is the index app and it is protected. Click here to <a
 			href="protected.html">access</a> another protected resource.
+	</p>
+	
+	<p>
+		You can now call a protected API.
+		<button id="withoutHeaderButton">Sans Header</button>
+		<button id="withHeaderButton">Avec Header</button>
 	</p>
 
 </body>

@@ -4,12 +4,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-@Path("/")
-public class AppApi {
+@Path("/hello")
+public class HelloWorldApi {
 
     @GET
     public Response get() {
-	return Response.ok("I am protected").build();
+	return Response.ok("Hello world").build();
     }
 
 }
