@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.github.tomacla.auth.server.core.service.DefaultAccountService;
+import io.github.tomacla.auth.server.core.service.AccountService;
 
 @Controller
 public class LoginController {
@@ -21,7 +21,7 @@ public class LoginController {
     protected static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
     
     @Autowired
-    private DefaultAccountService authService;
+    private AccountService authService;
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String showLoginForm(@RequestParam(name = "redirect_to", required = false) String redirectTo, Model model) {
@@ -71,12 +71,6 @@ public class LoginController {
 	model.addAttribute("message", "Login failed : check your credentials");
 	model.addAttribute("credentials", credentials);
 	return "login";
-    }
-
-    @RequestMapping(path = "/success", method = RequestMethod.GET)
-    public String showSuccessPage(Model model) {
-	LOGGER.debug("Show success page");
-	return "success";
     }
 
     public static class CredentialsWrapper {

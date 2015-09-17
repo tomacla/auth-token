@@ -45,8 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public ReadOnlyTokenManager readOnlyTokenManager() {
-	// TODO put this somewhere else
-	String secret = "6380BA89DA46FB77353BD1DFE0CEB87B43CE978E46B9B9B73AB3881AC954E07A";
+	String secret = env.getProperty("auth.server.secret", "thisisthedefaultsecretthatmustbeoveriddeninapropertiesfile");
 	LOGGER.info("A secret has been configure in the code");
 	return new ReadOnlyTokenManager(secret);
     }
