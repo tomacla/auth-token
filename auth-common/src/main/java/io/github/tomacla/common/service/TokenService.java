@@ -2,9 +2,13 @@ package io.github.tomacla.common.service;
 
 import java.util.Optional;
 
-public interface TokenService {
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-    public Boolean verify(String token);
+import io.github.tomacla.common.security.token.TokenDTO;
+
+public interface TokenService extends UserDetailsService {
+
+    public Optional<TokenDTO> verify(String token);
     public Optional<String> getTokenFromAuthCode(String authCode);
 
 }

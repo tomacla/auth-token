@@ -16,8 +16,6 @@ import io.github.tomacla.common.security.token.TokenManager;
 
 public class DefaultAccountService implements AccountService {
 
-    // TODO introduce auth providers ALWAYS_TRUE, LDAP, JDBC, IN_MEMORY
-
     protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultAccountService.class);
     protected static final String ISSUER = "AUTH_SERVER";
     

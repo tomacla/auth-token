@@ -1,6 +1,7 @@
 package io.github.tomacla.common.security.token;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 import org.jose4j.lang.JoseException;
 import org.junit.Assert;
@@ -26,11 +27,12 @@ public class TokenManagerTest {
 	
 	String token = this.manager.getToken(input);	
 	
-	TokenDTO output = this.manager.readToken(token);
+	Optional<TokenDTO> output = this.manager.readToken(token);
 	
-	Assert.assertEquals(input.getEmail(), output.getEmail());
-	Assert.assertEquals(input.getIssuer(), output.getIssuer());
-	Assert.assertEquals(input.getSubject(), output.getSubject());
+	Assert.assertTrue(output.isPresent());
+	Assert.assertEquals(input.getEmail(), output.get().getEmail());
+	Assert.assertEquals(input.getIssuer(), output.get().getIssuer());
+	Assert.assertEquals(input.getSubject(), output.get().getSubject());
 	
     }
     
