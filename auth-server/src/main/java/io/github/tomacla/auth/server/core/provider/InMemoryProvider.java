@@ -16,10 +16,10 @@ public class InMemoryProvider implements AccountProvider {
 
     private List<InMemoryAccount> accounts;
 
-    public InMemoryProvider() {
+    public InMemoryProvider(String userFileName) {
 	try {
 	    ObjectMapper om = new ObjectMapper();
-	    InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("users.json");
+	    InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(userFileName);
 	    accounts = om.readValue(resourceAsStream, new TypeReference<List<InMemoryAccount>>() {
 	    });
 	} catch (IOException e) {
@@ -30,22 +30,22 @@ public class InMemoryProvider implements AccountProvider {
 
     @Override
     public Boolean authenticate(String login, String password) {
-	if(login == null || password == null) {
+	if (login == null || password == null) {
 	    return false;
 	}
-	for(InMemoryAccount account : accounts) {
-	    if(account.login.equals(login) && account.password.equals(password)) {
+	for (InMemoryAccount account : accounts) {
+	    if (account.login.equals(login) && account.password.equals(password)) {
 		return true;
 	    }
 	}
 	return false;
     }
-    
+
     public static class InMemoryAccount {
-	
+
 	public String login;
 	public String password;
-	
+
     }
 
 }

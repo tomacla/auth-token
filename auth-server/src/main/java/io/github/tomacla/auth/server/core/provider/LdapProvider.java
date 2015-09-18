@@ -4,8 +4,7 @@ public class LdapProvider implements AccountProvider {
 
     @Override
     public Boolean authenticate(String login, String password) {
-	// TODO to be implemented
-	return false;
+	throw new UnsupportedOperationException("LDAP provider is not implemented yet");
     }
 
 }

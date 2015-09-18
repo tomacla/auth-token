@@ -1,6 +1,5 @@
 package io.github.tomacla.auth.server.core.provider;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,9 +12,9 @@ public class LdapProviderTest {
 	provider = new LdapProvider();
     }
     
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void authenticate() {
-	Assert.assertFalse(provider.authenticate("foo", "bar"));
+	provider.authenticate("foo", "bar");
     }
     
     

@@ -10,7 +10,7 @@ public class InMemoryProviderTest {
     
     @Before
     public void before() {
-	provider = new InMemoryProvider();
+	provider = new InMemoryProvider("users.json");
     }
     
     @Test

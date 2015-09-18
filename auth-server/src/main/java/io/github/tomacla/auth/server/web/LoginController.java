@@ -19,7 +19,7 @@ import io.github.tomacla.auth.server.core.service.AccountService;
 public class LoginController {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
-    
+
     @Autowired
     private AccountService authService;
 
@@ -27,7 +27,7 @@ public class LoginController {
     public String showLoginForm(@RequestParam(name = "redirect_to", required = false) String redirectTo, Model model) {
 	LOGGER.debug("Display login form");
 	if (redirectTo == null || redirectTo.trim().isEmpty()) {
-	    redirectTo = "";
+	    redirectTo = null;
 	}
 
 	CredentialsWrapper credentials = new CredentialsWrapper();
@@ -43,29 +43,28 @@ public class LoginController {
 	LOGGER.debug("Handle post request from login form");
 	Optional<String> token = authService.authenticate(credentials.login, credentials.password);
 	if (token.isPresent()) {
-	    
+
 	    if (credentials.redirectTo == null || credentials.redirectTo.trim().isEmpty()) {
 		model.addAttribute("token", token.get());
 		return "success";
 	    }
-	    
-	    if(!isValidUrl(credentials.redirectTo)) {
-		credentials.redirectTo = "";
+
+	    if (!isValidUrl(credentials.redirectTo)) {
+		credentials.redirectTo = null;
 		model.addAttribute("message", "Login failed : wrong redirection URL");
 		model.addAttribute("credentials", credentials);
 		return "login";
 	    }
-	    
+
 	    String authCode = authService.getAuthCodeForToken(token.get());
-	    
+
 	    String redirectUrl = credentials.redirectTo;
-	    if(redirectUrl.contains("?")) {
+	    if (redirectUrl.contains("?")) {
 		redirectUrl += "&auth_code=" + authCode;
-	    }
-	    else {
+	    } else {
 		redirectUrl += "?auth_code=" + authCode;
 	    }
-	    
+
 	    return "redirect:" + redirectUrl;
 	}
 	model.addAttribute("message", "Login failed : check your credentials");
@@ -113,5 +112,5 @@ public class LoginController {
 	    return false;
 	}
     }
-    
+
 }

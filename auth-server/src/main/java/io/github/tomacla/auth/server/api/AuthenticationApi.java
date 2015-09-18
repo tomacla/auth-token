@@ -23,7 +23,7 @@ import io.github.tomacla.auth.server.core.service.AccountService;
 public class AuthenticationApi {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationApi.class);
-    
+
     private AccountService authService;
 
     @Inject
@@ -53,14 +53,14 @@ public class AuthenticationApi {
 	}
 	return Response.status(Status.BAD_REQUEST).build();
     }
-    
+
     @POST
     @Path("/auth-code")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
     @Produces(MediaType.TEXT_PLAIN_VALUE)
     public Response getTokenFromAuthCode(String authCode) {
 	Optional<String> tokenFromAuthCode = this.authService.getTokenFromAuthCode(authCode);
-	if(tokenFromAuthCode.isPresent()) {
+	if (tokenFromAuthCode.isPresent()) {
 	    return Response.ok(tokenFromAuthCode.get()).build();
 	}
 	return Response.status(Status.BAD_REQUEST).build();

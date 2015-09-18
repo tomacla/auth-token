@@ -18,7 +18,7 @@ public class DefaultAccountService implements AccountService {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultAccountService.class);
     protected static final String ISSUER = "AUTH_SERVER";
-    
+
     private SecureRandom random;
     private TokenManager tokenManager;
     private List<AccountProvider> providers;
@@ -33,8 +33,8 @@ public class DefaultAccountService implements AccountService {
 
     public Optional<String> authenticate(String login, String password) {
 	LOGGER.debug("Authentication of {}", login);
-	for(AccountProvider provider : this.providers) {
-	    if(provider.authenticate(login, password)) {
+	for (AccountProvider provider : this.providers) {
+	    if (provider.authenticate(login, password)) {
 		return Optional.of(this.generateToken(login));
 	    }
 	}
