@@ -2,7 +2,7 @@ package io.github.tomacla.auth.server.core;
 
 public enum Providers {
 
-    ALWAYS_TRUE("alwaysTrue"), IN_MEMORY("inMemory"), JDBC("jdbc"), LDAP("ldap");
+    ALWAYS_TRUE("alwaystrue"), IN_MEMORY("inmemory"), JDBC("jdbc"), LDAP("ldap");
 
     private String text;
 

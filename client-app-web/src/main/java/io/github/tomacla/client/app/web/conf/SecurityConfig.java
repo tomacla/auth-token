@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public ReadOnlyTokenManager readOnlyTokenManager() {
-	String secret = env.getProperty("auth.server.secret", "thisisthedefaultsecretthatmustbeoveriddeninapropertiesfile");
+	String secret = env.getProperty("token.secret", "thisisthedefaultsecretthatmustbeoveriddeninapropertiesfile");
 	LOGGER.info("A secret has been configure in the code");
 	return new ReadOnlyTokenManager(secret);
     }

@@ -44,7 +44,7 @@ public class SpringBootstrap {
     public TokenManager tokenManager() {
 	Integer tokenValidityInDays = env.getProperty("token.validity", Integer.class, 15);
 	LOGGER.info("Auth server tokens will be valide for {} days", tokenValidityInDays);
-	String secret = env.getProperty("auth.server.secret",
+	String secret = env.getProperty("token.secret",
 		"thisisthedefaultsecretthatmustbeoveriddeninapropertiesfile");
 	LOGGER.info("A secret has been configure in the code");
 	return new TokenManager(secret, tokenValidityInDays);
@@ -52,7 +52,7 @@ public class SpringBootstrap {
 
     @Bean
     public List<AccountProvider> accountProviders() {
-	String strProvider = env.getProperty("providers", Providers.ALWAYS_TRUE.toString());
+	String strProvider = env.getProperty("auth.providers", Providers.ALWAYS_TRUE.toString());
 	if (strProvider == null || strProvider.trim().isEmpty()) {
 	    strProvider = Providers.ALWAYS_TRUE.toString();
 	}
@@ -66,15 +66,15 @@ public class SpringBootstrap {
 		    activatedProviders.add(new AlwaysTrueProvider());
 		    LOGGER.info("Adding an always true provider (TEST ONLY)");
 		} else if (provider.equals(Providers.IN_MEMORY)) {
-		    activatedProviders.add(new InMemoryProvider("users.json"));
+		    activatedProviders.add(new InMemoryProvider(env.getProperty("auth.providers.inmemory.filename", "users.json")));
 		    LOGGER.info("Adding a in memory provider");
 		} else if (provider.equals(Providers.JDBC)) {
 		    activatedProviders.add(new JdbcProvider(buildDataSource(),
-			    env.getProperty("providers.jdbc.schema"),
-			    env.getProperty("providers.jdbc.table"),
-			    env.getProperty("providers.jdbc.column.login"),
-			    env.getProperty("providers.jdbc.column.password"),
-			    PasswordEncoding.fromString(env.getProperty("providers.jdbc.column.password", "none"))));
+			    env.getProperty("auth.providers.jdbc.schema"),
+			    env.getProperty("auth.providers.jdbc.table"),
+			    env.getProperty("auth.providers.jdbc.column.login"),
+			    env.getProperty("auth.providers.jdbc.column.password"),
+			    PasswordEncoding.fromString(env.getProperty("auth.providers.jdbc.password.encoding", "none"))));
 		    LOGGER.info("Adding a jdbc provider");
 		} else if (provider.equals(Providers.LDAP)) {
 		    activatedProviders.add(new LdapProvider());
@@ -94,10 +94,10 @@ public class SpringBootstrap {
 
     private DataSource buildDataSource() {
 	BasicDataSource connectionPool = new BasicDataSource();
-	connectionPool.setDriverClassName(env.getProperty("providers.jdbc.driver"));
-	connectionPool.setUsername(env.getProperty("providers.jdbc.username"));
-	connectionPool.setPassword(env.getProperty("providers.jdbc.password"));
-	connectionPool.setUrl(env.getProperty("providers.jdbc.url"));
+	connectionPool.setDriverClassName(env.getProperty("auth.providers.jdbc.driver"));
+	connectionPool.setUsername(env.getProperty("auth.providers.jdbc.username"));
+	connectionPool.setPassword(env.getProperty("auth.providers.jdbc.password"));
+	connectionPool.setUrl(env.getProperty("auth.providers.jdbc.url"));
 	connectionPool.setInitialSize(1);
 	return connectionPool;
     }

@@ -1,5 +1,8 @@
 package io.github.tomacla.client.app.conf;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
-import io.github.tomacla.common.security.entrypoint.UnauthorizedEntryPoint;
+import io.github.tomacla.common.security.Headers;
+import io.github.tomacla.common.security.entrypoint.CsrfOrUnauthorizedEntryPoint;
+import io.github.tomacla.common.security.filter.CsrfHeadersWriterFilter;
 import io.github.tomacla.common.security.filter.FilterPosition;
 import io.github.tomacla.common.security.filter.TokenProcessing;
 import io.github.tomacla.common.security.filter.TokenProcessingFilter;
@@ -39,13 +44,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 	http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 		.addFilterAfter(tokenProcessingFilter(), FilterPosition.PRE_AUTH)
+		.addFilterAfter(csrfHeadersWriterFilter(), FilterPosition.LAST)
 		.exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint()).and()
 		.authorizeRequests().antMatchers("/**").authenticated();
     }
-
+    
     @Bean
     public ReadOnlyTokenManager readOnlyTokenManager() {
-	String secret = env.getProperty("auth.server.secret", "thisisthedefaultsecretthatmustbeoveriddeninapropertiesfile");
+	String secret = env.getProperty("token.secret", "thisisthedefaultsecretthatmustbeoveriddeninapropertiesfile");
 	LOGGER.info("A secret has been configure in the code");
 	return new ReadOnlyTokenManager(secret);
     }
@@ -53,6 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public TokenAuthenticationProvider authenticationProvider() {
 	return new TokenAuthenticationProvider(tokenService());
+    }
+    
+    @Bean
+    public CsrfHeadersWriterFilter csrfHeadersWriterFilter() {
+	return new CsrfHeadersWriterFilter(getAllowOrigin(), getAllowMethods(), getAllowHeaders());
     }
     
     @Bean
@@ -68,8 +79,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
     @Bean
-    public UnauthorizedEntryPoint unauthorizedEntryPoint() {
-	return new UnauthorizedEntryPoint();
+    public CsrfOrUnauthorizedEntryPoint unauthorizedEntryPoint() {
+	return new CsrfOrUnauthorizedEntryPoint(getAllowOrigin(), getAllowMethods(), getAllowHeaders());
     }
+    
+    private String getAllowOrigin() {
+	return "*";
+    }
+    
+    private List<String> getAllowHeaders() {
+	return Arrays.asList(Headers.X_TOKEN, "Content-Type", "Accept");
+    }
+    
+    private List<String> getAllowMethods() {
+	return Arrays.asList("GET", "OPTIONS");
+    }
+    
 
 }

@@ -17,5 +17,4 @@ public class LdapProviderTest {
 	provider.authenticate("foo", "bar");
     }
     
-    
 }
