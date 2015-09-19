@@ -1,6 +1,7 @@
 package io.github.tomacla.auth.server.conf;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 
+import io.github.tomacla.auth.server.api.csrf.CsrfConfig;
 import io.github.tomacla.auth.server.core.PasswordEncoding;
 import io.github.tomacla.auth.server.core.Providers;
 import io.github.tomacla.auth.server.core.provider.AccountProvider;
@@ -24,7 +26,7 @@ import io.github.tomacla.auth.server.core.provider.JdbcProvider;
 import io.github.tomacla.auth.server.core.provider.LdapProvider;
 import io.github.tomacla.auth.server.core.service.AccountService;
 import io.github.tomacla.auth.server.core.service.DefaultAccountService;
-import io.github.tomacla.common.security.token.TokenManager;
+import io.github.tomacla.common.token.TokenManager;
 
 @Configuration
 @PropertySource(value = "classpath:auth-server.properties", ignoreResourceNotFound = true)
@@ -38,6 +40,11 @@ public class SpringBootstrap {
     @Bean
     public static PropertySourcesPlaceholderConfigurer properties() {
 	return new PropertySourcesPlaceholderConfigurer();
+    }
+    
+    @Bean
+    public CsrfConfig csrfConfig() {
+	return new CsrfConfig(getAllowOrigin(), getAllowMethods(), getAllowHeaders());
     }
 
     @Bean
@@ -89,7 +96,9 @@ public class SpringBootstrap {
 
     @Bean
     public AccountService accountService() {
-	return new DefaultAccountService(tokenManager(), accountProviders());
+	String issuerName = env.getProperty("token.issuer", "AUTH_SERVER");
+	 LOGGER.info("Auth server issuer name is {}", issuerName);
+	return new DefaultAccountService(issuerName, tokenManager(), accountProviders());
     }
 
     private DataSource buildDataSource() {
@@ -100,6 +109,20 @@ public class SpringBootstrap {
 	connectionPool.setUrl(env.getProperty("auth.providers.jdbc.url"));
 	connectionPool.setInitialSize(1);
 	return connectionPool;
+    }
+    
+    private String getAllowOrigin() {
+	String allowOrigin = env.getProperty("csrf.origin", "*");
+	LOGGER.info("CSRF Allowed Origin are {}", allowOrigin);
+	return allowOrigin;
+    }
+    
+    private List<String> getAllowHeaders() {
+	return Arrays.asList("Content-Type", "Accept");
+    }
+    
+    private List<String> getAllowMethods() {
+	return Arrays.asList("GET", "POST", "OPTIONS");
     }
 
 }

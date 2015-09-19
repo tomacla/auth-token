@@ -105,6 +105,12 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>

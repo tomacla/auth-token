@@ -25,6 +25,11 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<groupId>io.github.tomacla.sso</groupId>
 			<artifactId>auth-common</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>io.github.tomacla.sso</groupId>
+			<artifactId>spring-security-components</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -39,16 +44,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
 		</dependency>
 
 		<dependency>

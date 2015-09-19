@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import io.github.tomacla.auth.server.core.provider.AccountProvider;
-import io.github.tomacla.common.security.token.TokenManager;
+import io.github.tomacla.common.token.TokenManager;
 
 public class DefaultAccountServiceTest {
 
@@ -21,7 +21,7 @@ public class DefaultAccountServiceTest {
     public void before() {
 	this.manager = Mockito.mock(TokenManager.class);
 	this.provider = Mockito.mock(AccountProvider.class);
-	this.service = new DefaultAccountService(manager, Arrays.asList(this.provider));
+	this.service = new DefaultAccountService("test", manager, Arrays.asList(this.provider));
     }
 
     @Test

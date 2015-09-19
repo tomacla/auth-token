@@ -11,20 +11,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.tomacla.auth.server.core.provider.AccountProvider;
-import io.github.tomacla.common.security.token.TokenDTO;
-import io.github.tomacla.common.security.token.TokenManager;
+import io.github.tomacla.common.token.TokenDTO;
+import io.github.tomacla.common.token.TokenManager;
 
 public class DefaultAccountService implements AccountService {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultAccountService.class);
-    protected static final String ISSUER = "AUTH_SERVER";
 
+    private String issuerName;
     private SecureRandom random;
     private TokenManager tokenManager;
     private List<AccountProvider> providers;
     private Map<String, String> authCodes;
 
-    public DefaultAccountService(TokenManager tokenManager, List<AccountProvider> providers) {
+    public DefaultAccountService(String issuerName, TokenManager tokenManager, List<AccountProvider> providers) {
+	this.issuerName = issuerName;
 	this.tokenManager = tokenManager;
 	this.providers = providers;
 	this.random = new SecureRandom();
@@ -56,7 +57,7 @@ public class DefaultAccountService implements AccountService {
 
     private String generateToken(String login) {
 	TokenDTO tokenDTO = new TokenDTO();
-	tokenDTO.setIssuer(ISSUER);
+	tokenDTO.setIssuer(issuerName);
 	tokenDTO.setEmail(login);
 	tokenDTO.setSubject("Authentication token");
 	return this.tokenManager.getToken(tokenDTO);

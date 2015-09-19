@@ -15,8 +15,6 @@
 
 	<modules>
 		<module>auth-server</module>
-		<module>client-app</module>
-		<module>client-app-web</module>
 		<module>auth-common</module>
 		<module>spring-security-components</module>
 		<module>sample-client-app</module>
@@ -41,6 +39,7 @@
 		<commons.dbcp2.version>2.1.1</commons.dbcp2.version>
 		<commons.codec.version>20041127.091804</commons.codec.version>
 		<hsqldb.version>2.3.2</hsqldb.version>
+		<jax.rs.version>2.0.1</jax.rs.version>
 	</properties>
 
 	<dependencyManagement>
@@ -49,6 +48,12 @@
 			<dependency>
 				<groupId>io.github.tomacla.sso</groupId>
 				<artifactId>auth-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.github.tomacla.sso</groupId>
+				<artifactId>spring-security-components</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -200,6 +205,12 @@
 				<groupId>org.hsqldb</groupId>
 				<artifactId>hsqldb</artifactId>
 				<version>${hsqldb.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.ws.rs</groupId>
+				<artifactId>javax.ws.rs-api</artifactId>
+				<version>${jax.rs.version}</version>
 			</dependency>
 
 		</dependencies>
