@@ -134,9 +134,33 @@ The module spring-security-components provide all the needed components to build
 
 ## Always true
 
+**This is only for testing purpose**
+
+This provider does not need configuration and returns always true.
+
 ## In memory
 
+This provider is based on a json configuration file to get the list of the credentials.
+
+For example :
+
+	[
+		{
+			"login" : "tomacla",
+			"password" : "tomaclapwd"
+		}
+	]
+
 ## JDBC
+
+This provider rely on a remote database to provide authentication. The configuration must include parameters to connect to the database with JDBC but also the following parameters :
+
+* table : name of the table which contains credentials
+* column.login : name of the column of the table containing the login of the user
+* column.password : name of the column of the table containing the password of the user
+* password.encoding :
+  * none : the password is stored in the databse without encoding
+  * md5 : the md5 hash of the password is stored in the database
 
 ## LDAP
 
