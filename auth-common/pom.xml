@@ -15,7 +15,9 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<packaging>jar</packaging>
 
-	<name>Common components for authentication</name>
+	<name>auth-common</name>
+	<description>Common classes</description>
+	<url>http://tomacla.github.io</url>
 
 	<dependencies>
 

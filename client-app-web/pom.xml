@@ -15,7 +15,9 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<packaging>war</packaging>
 
-	<name>Client Web Interface</name>
+	<name>client-app</name>
+	<description>Client Web Application</description>
+	<url>http://tomacla.github.io</url>
 
 	<dependencies>
 

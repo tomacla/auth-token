@@ -9,13 +9,19 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>SSO Proof of concept</name>
+	<name>parent</name>
+	<description>SSO Proof of concept parent POM</description>
+	<url>http://tomacla.github.io</url>
 
 	<modules>
 		<module>auth-server</module>
 		<module>client-app</module>
 		<module>client-app-web</module>
 		<module>auth-common</module>
+		<module>spring-security-components</module>
+		<module>sample-client-app</module>
+		<module>sample-client-app-spring</module>
+		<module>sample-server-app</module>
 	</modules>
 
 	<properties>
